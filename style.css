@@ -1,0 +1,570 @@
+/* ============================================================
+   BDD의 지뢰찾기 — style.css
+   레트로 픽셀 스타일 / Gray & Blue
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    /* Retro Windows-style gray palette */
+    --bg: #1a1a2e;
+    /* 배경: 짙은 네이비 — 그라디언트 없음 */
+    --bg2: #16213e;
+    --bg3: #0f3460;
+
+    --panel: #c0c0c0;
+    /* 클래식 Win9x 회색 */
+    --panel-light: #ffffff;
+    --panel-mid: #d4d0c8;
+    --panel-dark: #808080;
+    --panel-darker: #404040;
+
+    --cell-up: #bdbdbd;
+    --cell-down: #aaaaaa;
+
+    --lcd-bg: #080808;
+    --lcd-red: #ff2200;
+
+    --blue: #000084;
+    /* 클래식 Win9x 파랑 (타이틀바) */
+    --blue-light: #1084d0;
+    --blue-glow: rgba(16, 132, 208, 0.35);
+
+    --text-panel: #000000;
+    --text-light: #e8e8e8;
+    --text-muted: #7a8898;
+
+    --font-pixel: 'Press Start 2P', monospace;
+    --font-ko: 'Nanum Gothic Coding', monospace;
+
+    --cell-size: 28px;
+
+    /* Windows 9x bevel helpers */
+    --bevel-out: 2px solid var(--panel-light),
+        0 0 0 2px var(--panel-dark);
+    --bevel-in: inset 2px 2px 0 var(--panel-dark),
+        inset -2px -2px 0 var(--panel-light);
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+html,
+body {
+    height: 100%;
+    font-family: var(--font-ko);
+    background: var(--bg);
+    /* 단색 — 그라디언트 없음 */
+    color: var(--text-light);
+    min-height: 100vh;
+    image-rendering: pixelated;
+}
+
+/* scanline overlay for CRT retro feel */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9000;
+    background: repeating-linear-gradient(to bottom,
+            transparent 0px,
+            transparent 3px,
+            rgba(0, 0, 0, 0.08) 3px,
+            rgba(0, 0, 0, 0.08) 4px);
+}
+
+/* ── Site Header ──────────────────────────────────────────── */
+.site-header {
+    text-align: center;
+    padding: 1.6rem 1rem 0.8rem;
+}
+
+.site-title {
+    font-family: var(--font-pixel);
+    font-size: clamp(0.7rem, 2.5vw, 1.1rem);
+    color: #fff;
+    letter-spacing: 0.04em;
+    text-shadow: 2px 2px 0 var(--blue), 4px 4px 0 rgba(0, 0, 0, 0.4);
+}
+
+.site-subtitle {
+    margin-top: 0.5rem;
+    font-family: var(--font-pixel);
+    font-size: 0.45rem;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+/* ── Game Wrapper ─────────────────────────────────────────── */
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding-bottom: 1rem;
+}
+
+/* ── Control Panel ────────────────────────────────────────── */
+.control-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: calc(var(--cell-size) * 15 + 12px);
+    max-width: 96vw;
+    background: var(--panel);
+    /* Win9x outer raised border */
+    border-top: 2px solid var(--panel-light);
+    border-left: 2px solid var(--panel-light);
+    border-right: 2px solid var(--panel-darker);
+    border-bottom: 2px solid var(--panel-darker);
+    padding: 6px 8px;
+    border-radius: 0;
+}
+
+/* LCD Display */
+.display-box {
+    background: var(--lcd-bg);
+    border-top: 2px solid var(--panel-dark);
+    border-left: 2px solid var(--panel-dark);
+    border-right: 2px solid var(--panel-light);
+    border-bottom: 2px solid var(--panel-light);
+    padding: 3px 8px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.display-box span {
+    font-family: var(--font-pixel);
+    font-size: 1.35rem;
+    color: var(--lcd-red);
+    letter-spacing: 0.06em;
+    display: block;
+    line-height: 1.1;
+    text-shadow: 0 0 6px rgba(255, 34, 0, 0.6);
+}
+
+/* Face Button */
+.face-btn {
+    background: var(--panel);
+    border-top: 2px solid var(--panel-light);
+    border-left: 2px solid var(--panel-light);
+    border-right: 2px solid var(--panel-darker);
+    border-bottom: 2px solid var(--panel-darker);
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: none;
+}
+
+.face-btn:active {
+    border-top-color: var(--panel-darker);
+    border-left-color: var(--panel-darker);
+    border-right-color: var(--panel-light);
+    border-bottom-color: var(--panel-light);
+}
+
+.face-btn img {
+    width: 28px;
+    height: 28px;
+    image-rendering: pixelated;
+    display: block;
+    pointer-events: none;
+}
+
+/* ── Board Frame ──────────────────────────────────────────── */
+.board-frame {
+    background: var(--panel);
+    border-top: 2px solid var(--panel-darker);
+    border-left: 2px solid var(--panel-darker);
+    border-right: 2px solid var(--panel-light);
+    border-bottom: 2px solid var(--panel-light);
+    padding: 3px;
+    border-radius: 0;
+}
+
+/* ── Board Grid ───────────────────────────────────────────── */
+.board {
+    display: grid;
+    grid-template-columns: repeat(15, var(--cell-size));
+    grid-template-rows: repeat(15, var(--cell-size));
+    gap: 0;
+    user-select: none;
+}
+
+/* ── Cells ────────────────────────────────────────────────── */
+.cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-pixel);
+    font-size: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    background: var(--cell-up);
+    border-top: 2px solid var(--panel-light);
+    border-left: 2px solid var(--panel-light);
+    border-right: 2px solid var(--panel-dark);
+    border-bottom: 2px solid var(--panel-dark);
+    position: relative;
+}
+
+.cell:hover:not(.revealed):not(.flagged) {
+    background: #cacaca;
+}
+
+.cell.revealed {
+    background: var(--cell-down);
+    border: 1px solid var(--panel-dark);
+    cursor: default;
+}
+
+.cell.flagged img,
+.cell.revealed img {
+    width: 16px;
+    height: 16px;
+    image-rendering: pixelated;
+    pointer-events: none;
+}
+
+.cell.mine-revealed {
+    background: #cc0000 !important;
+}
+
+.cell.exploded {
+    background: #ff0000 !important;
+    animation: retro-flash 0.35s steps(4, end);
+}
+
+@keyframes retro-flash {
+    0% {
+        background: #ffffff !important;
+    }
+
+    25% {
+        background: #ffff00 !important;
+    }
+
+    50% {
+        background: #ff8800 !important;
+    }
+
+    75% {
+        background: #ff2200 !important;
+    }
+
+    100% {
+        background: #ff0000 !important;
+    }
+}
+
+/* Classic number colours */
+.cell[data-num="1"] {
+    color: #0000aa;
+}
+
+.cell[data-num="2"] {
+    color: #007700;
+}
+
+.cell[data-num="3"] {
+    color: #cc0000;
+}
+
+.cell[data-num="4"] {
+    color: #440088;
+}
+
+.cell[data-num="5"] {
+    color: #880000;
+}
+
+.cell[data-num="6"] {
+    color: #008888;
+}
+
+.cell[data-num="7"] {
+    color: #000000;
+}
+
+.cell[data-num="8"] {
+    color: #555555;
+}
+
+/* ── Current Player Tag ───────────────────────────────────── */
+.current-player-tag {
+    margin-top: 6px;
+    font-family: var(--font-pixel);
+    font-size: 0.42rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-align: center;
+}
+
+.current-player-tag strong {
+    color: var(--blue-light);
+    margin-left: 4px;
+}
+
+.sync-status {
+    display: inline-block;
+    font-family: var(--font-ko);
+    font-size: 0.7rem;
+    margin-left: 8px;
+    opacity: 0.9;
+}
+
+/* ── Scoreboard ───────────────────────────────────────────── */
+.scoreboard-section {
+    max-width: 480px;
+    margin: 1.8rem auto 3rem;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.scoreboard-title {
+    font-family: var(--font-pixel);
+    font-size: 0.75rem;
+    color: var(--blue-light);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.06em;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.scoreboard-hint {
+    font-family: var(--font-ko);
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    margin-bottom: 0.9rem;
+}
+
+.scoreboard-table-wrapper {
+    background: #0d0d1a;
+    border-top: 2px solid var(--panel-darker);
+    border-left: 2px solid var(--panel-darker);
+    border-right: 2px solid var(--panel-mid);
+    border-bottom: 2px solid var(--panel-mid);
+    overflow: hidden;
+}
+
+.scoreboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-ko);
+    font-size: 0.82rem;
+}
+
+.scoreboard-table thead {
+    background: var(--blue);
+}
+
+.scoreboard-table th {
+    padding: 7px 10px;
+    text-align: left;
+    font-family: var(--font-pixel);
+    font-size: 0.45rem;
+    letter-spacing: 0.08em;
+    color: #fff;
+    border-bottom: 2px solid var(--panel-darker);
+}
+
+.scoreboard-table td {
+    padding: 7px 10px;
+    color: #d0d8e8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.scoreboard-table tbody tr:hover td {
+    background: rgba(16, 132, 208, 0.12);
+}
+
+.scoreboard-table tbody tr:nth-child(1) td:first-child {
+    color: #ffd700;
+}
+
+.scoreboard-table tbody tr:nth-child(2) td:first-child {
+    color: #c0c0c0;
+}
+
+.scoreboard-table tbody tr:nth-child(3) td:first-child {
+    color: #cd7f32;
+}
+
+.scoreboard-empty {
+    padding: 1.2rem;
+    font-family: var(--font-ko);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    display: none;
+}
+
+.scoreboard-empty.visible {
+    display: block;
+}
+
+/* clear-btn removed — scores are permanent */
+
+/* ── Modals ───────────────────────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Win95-style window */
+.modal-card {
+    background: var(--panel);
+    border-top: 2px solid var(--panel-light);
+    border-left: 2px solid var(--panel-light);
+    border-right: 2px solid var(--panel-darker);
+    border-bottom: 2px solid var(--panel-darker);
+    padding: 0;
+    max-width: 340px;
+    width: 90%;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
+    transform: none;
+}
+
+/* Win9x title bar */
+.modal-pixel-header {
+    background: var(--blue);
+    color: #fff;
+    font-family: var(--font-pixel);
+    font-size: 0.5rem;
+    padding: 6px 10px;
+    letter-spacing: 0.06em;
+    border-bottom: 2px solid var(--panel-darker);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.win-card .modal-pixel-header {
+    background: #005a00;
+}
+
+.lose-card .modal-pixel-header {
+    background: #880000;
+}
+
+/* Card body */
+.modal-card>*:not(.modal-pixel-header) {
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+.modal-card>*:first-child {
+    padding-top: 0;
+}
+
+.modal-time-ko,
+.modal-sub-ko {
+    font-family: var(--font-ko);
+    font-size: 0.82rem;
+    color: var(--text-panel);
+    margin: 10px 0 6px;
+}
+
+.modal-time-ko strong {
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    color: #0000aa;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 6px 8px;
+    font-family: var(--font-ko);
+    font-size: 0.88rem;
+    color: #000;
+    background: #fff;
+    border-top: 2px solid var(--panel-darker);
+    border-left: 2px solid var(--panel-darker);
+    border-right: 2px solid var(--panel-light);
+    border-bottom: 2px solid var(--panel-light);
+    border-radius: 0;
+    outline: none;
+    margin: 8px 0 12px;
+    box-sizing: border-box;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 6px;
+    padding-bottom: 14px;
+}
+
+/* Win9x push button */
+.modal-btn {
+    padding: 6px 14px;
+    font-family: var(--font-pixel);
+    font-size: 0.45rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border-radius: 0;
+    border-top: 2px solid var(--panel-light);
+    border-left: 2px solid var(--panel-light);
+    border-right: 2px solid var(--panel-darker);
+    border-bottom: 2px solid var(--panel-darker);
+    transition: none;
+}
+
+.modal-btn:active {
+    border-top-color: var(--panel-darker);
+    border-left-color: var(--panel-darker);
+    border-right-color: var(--panel-light);
+    border-bottom-color: var(--panel-light);
+    transform: translate(1px, 1px);
+}
+
+.modal-btn.primary {
+    background: var(--panel);
+    color: #000;
+}
+
+.modal-btn.secondary {
+    background: var(--panel-mid);
+    color: #333;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 520px) {
+    :root {
+        --cell-size: 20px;
+    }
+
+    .display-box span {
+        font-size: 0.95rem;
+    }
+
+    .face-btn img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .cell.flagged img,
+    .cell.revealed img {
+        width: 12px;
+        height: 12px;
+    }
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bdd의 지뢰찾기</title>
+    <meta name="description" content="Bdd의 클래식 지뢰찾기 — 15×15, 지뢰 40개. 기록에 도전하세요!" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nanum+Gothic+Coding:wght@400;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Firebase SDK (compat 모드) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+
+    <!-- ===== 닉네임 입력 모달 (시작 전) ===== -->
+    <div class="modal-overlay active" id="nickname-modal" role="dialog" aria-modal="true"
+        aria-labelledby="nickname-title">
+        <div class="modal-card">
+            <div class="modal-pixel-header">💣 BDD의 지뢰찾기 💣</div>
+            <p class="modal-sub-ko">닉네임을 입력하고 게임을 시작하세요</p>
+            <input class="modal-input" id="nickname-input" type="text" maxlength="16" placeholder="닉네임 입력..."
+                autocomplete="off" />
+            <button class="modal-btn primary" id="start-game-btn">게임 시작</button>
+        </div>
+    </div>
+
+    <!-- ===== 헤더 ===== -->
+    <header class="site-header">
+        <h1 class="site-title">💣 Bdd의 지뢰찾기</h1>
+        <p class="site-subtitle">15 × 15 &nbsp;|&nbsp; 지뢰 40개</p>
+    </header>
+
+    <!-- ===== 게임 영역 ===== -->
+    <main class="game-wrapper">
+
+        <!-- 컨트롤 패널 -->
+        <div class="control-panel">
+            <div class="display-box" id="mine-counter" title="남은 지뢰 수">
+                <span id="mine-count-display">040</span>
+            </div>
+
+            <button class="face-btn" id="reset-btn" title="새 게임" aria-label="새 게임">
+                <img id="face-img" src="imgs/main.png" alt="표정" draggable="false" />
+            </button>
+
+            <div class="display-box" id="timer-box" title="경과 시간">
+                <span id="timer-display">000</span>
+            </div>
+        </div>
+
+        <!-- 보드 -->
+        <div class="board-frame">
+            <div id="board" class="board"></div>
+        </div>
+
+        <!-- 플레이어 태그 -->
+        <div class="current-player-tag">
+            <span id="player-tag-label">플레이어:</span>
+            <strong id="player-tag-name">—</strong>
+            <span class="sync-status" id="sync-status"></span>
+        </div>
+
+    </main>
+
+    <!-- ===== 스코어보드 ===== -->
+    <section class="scoreboard-section">
+        <h2 class="scoreboard-title">🏆 명예의 전당</h2>
+        <p class="scoreboard-hint">승리한 기록만 등록됩니다 · 전 세계 실시간 동기화</p>
+        <div class="scoreboard-table-wrapper">
+            <table class="scoreboard-table" id="scoreboard-table">
+                <thead>
+                    <tr>
+                        <th>순위</th>
+                        <th>닉네임</th>
+                        <th>시간(초)</th>
+                        <th>날짜</th>
+                    </tr>
+                </thead>
+                <tbody id="scoreboard-body"></tbody>
+            </table>
+            <p class="scoreboard-empty" id="scoreboard-empty">아직 기록이 없습니다.</p>
+        </div>
+    </section>
+
+    <!-- ===== 승리 모달 ===== -->
+    <div class="modal-overlay" id="win-modal" role="dialog" aria-modal="true">
+        <div class="modal-card win-card">
+            <div class="modal-pixel-header">🎉 승리!</div>
+            <p class="modal-time-ko">기록: <strong id="win-time-display">0</strong> 초</p>
+            <p class="modal-sub-ko">이 기록을 저장하시겠습니까?</p>
+            <div class="modal-actions">
+                <button class="modal-btn primary" id="save-score-btn">저장</button>
+                <button class="modal-btn secondary" id="win-skip-btn">건너뜀</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 패배 모달 ===== -->
+    <div class="modal-overlay" id="lose-modal" role="dialog" aria-modal="true">
+        <div class="modal-card lose-card">
+            <div class="modal-pixel-header">💥 게임 오버</div>
+            <p class="modal-sub-ko">지뢰를 밟았습니다. 다시 도전하세요!</p>
+            <button class="modal-btn primary" id="lose-retry-btn">다시 시작</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+
+</html>
