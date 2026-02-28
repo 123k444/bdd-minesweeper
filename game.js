@@ -11,12 +11,12 @@
 //     미입력 시 localStorage 로컬 저장으로 자동 전환됩니다.
 // ══════════════════════════════════════════════════════════════
 const FIREBASE_CONFIG = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDGI_q4StaY3D_Qv0ijD--q9E77AjjDlZ4",
+  authDomain: "wfcr-e69e9.firebaseapp.com",
+  projectId: "wfcr-e69e9",
+  storageBucket: "wfcr-e69e9.firebasestorage.app",
+  messagingSenderId: "775767833009",
+  appId: "1:775767833009:web:f793d59da5b8265c446590"
 };
 // ══════════════════════════════════════════════════════════════
 
